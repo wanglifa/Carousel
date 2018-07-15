@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>jq简单轮播图</title>
+    <style>
+        .img_box{
+            display: flex;
+            align-items: flex-start;
+            transition: all .3s linear;
+        }
+        .box{
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+        .red{
+            color: red;
+        }
+        span{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+  <div class="box">
+      <div class="img_box">
+        <img src="https://cdn8.littlethings.com/app/uploads/2017/05/havanese-small-dogs-600x600.jpg" alt="" width=300>
+        <img src="https://cdn4.littlethings.com/app/uploads/2017/05/japanese-spitz-small-dog-600x600.jpg" alt="" width=300>
+        <img src="https://cdn7.littlethings.com/app/uploads/2017/05/boston-terrier-small-dogs-600x600.jpg" alt="" width=300>
+      </div>
+  </div>
+  <div class="btn-wrapper">
+      <span>第1张</span>
+      <span>第2张</span>
+      <span>第3张</span>
+  </div>  
+  <script>
+      var allButtons = $(".btn-wrapper span");
+      allButtons.click(function(x){
+          var index = $(x.currentTarget).index();
+          var p = index*(-300);
+          $(".img_box").css({
+              "transform":"translateX("+p+"px)"
+          })
+          activeButton(allButtons.eq(index));
+          //让当前点击的这个索引值作为起始值，这样滚动就会从当前位置再次开始
+          n=index;
+      })
+
+      var n = 0;
+      var size = allButtons.length;
+      var timer = null;
+      //还没开始滚动的时候第一个按钮添加类
+      activeButton(allButtons.eq(n%size))
+      playAnimate()
+
+      $(".box").mouseenter(function(){
+          clearInterval(timer);
+      }).mouseleave(function(){
+        playAnimate()
+      })
+      
+      function activeButton($button){
+        $button.addClass('red').siblings().removeClass('red');
+      }
+      function playAnimate(){
+        timer = setInterval(()=>{
+          n+=1;
+          activeButton(allButtons.eq(n%size).trigger('click'))
+        },3000)
+      }
+  </script>
+</body>
+</html>
